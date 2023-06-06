@@ -10,6 +10,17 @@ fn main() {
     let mut todo = Todo {
         map: HashMap::new(),
     };
+
+    // add an item to our todo list
+    if action == "add" {
+        todo.insert(item);
+        match todo.save() {
+            Ok(_) => println!("Todo saved!"),
+            Err(why) => println!("An error occurred: {}", why),
+        }
+    } else {
+        println!("Action not recognized");
+    }
 }
 
 struct Todo {
