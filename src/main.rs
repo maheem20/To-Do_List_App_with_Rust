@@ -5,6 +5,11 @@ fn main() {
     let item = std::env::args().nth(2).expect("Please specify an item");
 
     println!("{:?} {:?}", action, item);
+
+    // create a new instance of our Todo struct
+    let mut todo = Todo {
+        map: HashMap::new(),
+    };
 }
 
 struct Todo {
