@@ -1,5 +1,6 @@
-use std::{collections::HashMap, str};
+use std::collections::HashMap;
 use std::io::Read;
+use std::str::FromStr;
 
 fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action");
@@ -8,9 +9,7 @@ fn main() {
     println!("{:?} {:?}", action, item);
 
     // create a new instance of our Todo struct
-    let mut todo = Todo {
-        map: HashMap::new(),
-    };
+    let mut todo = Todo::new().expect("Initialisation of db failed");
 
     // add an item to our todo list
     if action == "add" {
@@ -31,19 +30,29 @@ struct Todo {
 
 impl Todo {
     fn new() -> Result<Todo, std::io::Error> {
+        // open db.txt
         let mut f = std::fs::OpenOptions::new()
             .write(true)
             .create(true)
             .read(true)
             .open("db.txt")?;
+        // read the db.txt content into a String
         let mut content = String::new();
         f.read_to_string(&mut content)?;
-        let map: HashMap<String, bool> = content
-            .lines()
-            .map(|line| line.splitn(2, '\t').collect::<Vec<&str>>())
-            .map(|v| (v[0], v[1]))
-            .map(|(k, v)| (String::from(k), bool::from_str(v).unwrap()))
-            .collect();
+
+        // allocate an empty HashMap
+        let mut map = HashMap::new();
+
+        // loop through each line in the file
+        for line in content.lines() {
+            // split and bind the values to key and val
+            let mut values = line.split('\t');
+            let key = values.next().expect("No Key");
+            let val = values.next().expect("No Value");
+            // insert the key-val pair into hashmap
+            map.insert(String::from(key), bool::from_str(val).unwrap());
+        }
+        // return Ok with our Todo struct
         Ok(Todo { map })
     }
 
