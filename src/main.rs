@@ -9,7 +9,7 @@ fn main() {
     println!("{:?} {:?}", action, item);
 
     // create a new instance of our Todo struct
-    let mut todo = Todo::new().expect("Initialisation of db failed");
+    let mut todo = Todo::new().expect("Initialization of db failed");
 
     // add an item to our todo list
     if action == "add" {
